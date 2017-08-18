@@ -1,32 +1,25 @@
-import path from 'path'
-import webpack from 'webpack'
-import eslintFormatter from 'eslint-friendly-formatter'
-import config from '../config'
+import path from 'path';
+import webpack from 'webpack';
+import eslintFormatter from 'eslint-friendly-formatter';
+import config from '../config';
 
 const resolvePath = (dir) => {
-  return path.resolve(__dirname, '..', '..', dir)
-}
+  return path.resolve(__dirname, '..', '..', dir);
+};
 
 export default {
   entry: {
-    app: [
-      'whatwg-fetch',
-      './src/app/index.js'
-    ]
+    docs: './src/index.js'
   },
   output: {
     path: config.rootPath,
     publicPath: config.publicPath,
-    filename: '[name].js',
-    chunkFilename: '[name].js'
+    filename: '[name].js'
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      app: resolvePath('src/app'),
-      assets: resolvePath('src/assets'),
-      core: resolvePath('src/app/core'),
-      i18n: resolvePath('src/app/i18n')
+      assets: resolvePath('/src/assets')
     }
   },
   module: {
@@ -49,8 +42,12 @@ export default {
         loader: 'babel-loader',
         include: [
           resolvePath('build'),
-          resolvePath('src')
+          resolvePath('src'),
         ]
+      },
+      {
+        test: /\.theme$/,
+        use: ['raw-loader', 'sass-loader']
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -67,4 +64,4 @@ export default {
       'process.env': config.env
     })
   ]
-}
+};
