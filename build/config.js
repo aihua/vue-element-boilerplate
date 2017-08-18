@@ -5,10 +5,9 @@ const config = {
   rootPath: path.join(__dirname, '../dist'),
   nodePath: path.join(__dirname, '../node_modules'),
   srcPath: 'src',
-  docsPath: 'docs',
-  indexPath: 'docs/index.html',
+  indexPath: 'src/index.html',
   publicPath: '/',
-  assetsPath: 'docs/src/assets'
+  assetsPath: 'src/assets'
 };
 
 let dev = {
