@@ -8,8 +8,10 @@ require('es6-promise').polyfill();
 import './config.js';
 import routes from './routes.js';
 import App from './App';
+import './core';
 
 import PageContent from './components/PageContent';
+import PageContainer from './components/PageContainer';
 import DocsComponent from './components/DocsComponent';
 import ExampleBox from './components/ExampleBox';
 import ApiTable from './components/ApiTable';
@@ -22,6 +24,7 @@ Vue.component('example-box', ExampleBox);
 Vue.component('api-table', ApiTable);
 Vue.component('code-block', CodeBlock);
 Vue.component('release-version', ReleaseVersion);
+Vue.component('page-container', PageContainer);
 
 Vue.use(VueRouter);
 
@@ -31,7 +34,7 @@ let router = new VueRouter({
   routes
 });
 
-let Docs = Vue.component('app', App);
+let ECShop = Vue.component('app', App);
 let handleSectionTheme = (currentRoute) => {
   let theme = 'default';
   let name = currentRoute.name;
@@ -55,7 +58,7 @@ let handleSectionTheme = (currentRoute) => {
   Vue.material.setCurrentTheme(theme);
 };
 
-Docs = new Docs({
+ECShop = new ECShop({
   el: '#app',
   router
 });
@@ -70,7 +73,7 @@ router.beforeEach((to, from, next) => {
       mainContent.scrollTop = 0;
     }
 
-    Docs.closeSidenav();
+    ECShop.closeSidenav();
 
     next();
   });
