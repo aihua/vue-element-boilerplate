@@ -2,6 +2,7 @@
 const Introduction = (r) => require.ensure([], () => r(require('./pages/Introduction')), 'base');
 const About = (r) => require.ensure([], () => r(require('./pages/About')), 'base');
 const Error404 = (r) => require.ensure([], () => r(require('./pages/Error')), 'base');
+const Login = (r) => require.ensure([], () => r(require('./pages/account/Login')), 'base');
 
 /* account 模块*/
 const Account = (r) => require.ensure([], () => r(require('./pages/account/Account')), 'account');
@@ -16,12 +17,17 @@ const main = [
     path: '/about',
     name: 'about',
     component: About
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
   }
 ];
 
 const modules = [
   {
-    path: '/account',
+    path: '/sys/account',
     name: 'account',
     component: Account
   }

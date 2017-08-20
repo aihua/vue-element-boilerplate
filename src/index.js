@@ -9,6 +9,7 @@ import './config.js';
 import routes from './routes.js';
 import App from './App';
 import './core';
+import axios from 'axios';
 
 import PageContent from './components/PageContent';
 import PageContainer from './components/PageContainer';
@@ -17,6 +18,9 @@ import ExampleBox from './components/ExampleBox';
 import ApiTable from './components/ApiTable';
 import CodeBlock from './components/CodeBlock';
 import ReleaseVersion from './components/ReleaseVersion';
+
+
+Vue.prototype.$axios = axios;
 
 Vue.component('page-content', PageContent);
 Vue.component('docs-component', DocsComponent);
@@ -27,6 +31,7 @@ Vue.component('release-version', ReleaseVersion);
 Vue.component('page-container', PageContainer);
 
 Vue.use(VueRouter);
+
 
 let router = new VueRouter({
   mode: 'hash',

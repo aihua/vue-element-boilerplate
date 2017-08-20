@@ -43,6 +43,7 @@
     "vue": "^2.3.3"
   },
   "devDependencies": {
+    "axios": "^0.16.2",
     "autoprefixer": "^6.7.4",
     "autosize": "^3.0.20",
     "babel-cli": "^6.23.0",

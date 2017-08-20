@@ -9,7 +9,7 @@
 
       <release-version></release-version>
 
-      <md-button href="https://github.com/marcosmoura/vue-material" target="_blank" rel="noopener" class="md-icon-button github">
+      <md-button href="https://github.com/leonlibraries/ec-shop-management-ui-boilerplate" target="_blank" rel="noopener" class="md-icon-button github">
         <md-icon md-src="assets/icon-github.svg"></md-icon>
       </md-button>
     </md-whiteframe>
@@ -19,52 +19,55 @@
 </template>
 
 <style lang="scss" scoped>
-  .page-content {
-    min-height: 100%;
-    max-height: 100%;
-    flex: 1;
-    display: flex;
-    flex-flow: column
-  }
+.page-content {
+  min-height: 100%;
+  max-height: 100%;
+  flex: 1;
+  display: flex;
+  flex-flow: column
+}
 
-  .main-header {
-    z-index: 2;
-    color: #fff !important;
-  }
+.main-header {
+  z-index: 2;
+  color: #fff !important;
+}
 
-  .nav-trigger {
-    @media (min-width: 1281px) {
-      display: none;
-    }
+.nav-trigger {
+  @media (min-width: 1281px) {
+    display: none;
   }
+}
 
-  .md-title {
-    flex: 1;
-
-    @media (min-width: 1281px) {
-      margin-left: 8px;
-    }
+.md-title {
+  flex: 1;
+  @media (min-width: 1281px) {
+    margin-left: 8px;
   }
+}
 
-  .github {
-    @media (max-width: 480px) {
-      display: none;
-    }
+.github {
+  @media (max-width: 480px) {
+    display: none;
   }
+}
 </style>
 
 <script>
-  export default {
-    props: {
-      pageTitle: String
-    },
-    methods: {
-      toggleSidenav() {
-        this.$root.toggleSidenav();
-      }
-    },
-    mounted() {
-      document.title = this.pageTitle + ' - Vue Material';
+export default {
+  props: {
+    pageTitle: String
+  },
+  methods: {
+    toggleSidenav() {
+      this.$root.toggleSidenav();
     }
-  };
+  },
+  mounted() {
+    if (this.pageTitle !== undefined) {
+      document.title = this.pageTitle + ' - 商城管理后台';
+    } else {
+      document.title = '商城管理后台';
+    }
+  }
+};
 </script>
