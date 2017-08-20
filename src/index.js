@@ -3,6 +3,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import 'babel-polyfill';
 require('es6-promise').polyfill();
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-default/index.css';
 
 /* Configs */
 import './config.js';
@@ -17,7 +19,6 @@ import DocsComponent from './components/DocsComponent';
 import ExampleBox from './components/ExampleBox';
 import ApiTable from './components/ApiTable';
 import CodeBlock from './components/CodeBlock';
-import ReleaseVersion from './components/ReleaseVersion';
 
 
 Vue.prototype.$axios = axios;
@@ -27,10 +28,10 @@ Vue.component('docs-component', DocsComponent);
 Vue.component('example-box', ExampleBox);
 Vue.component('api-table', ApiTable);
 Vue.component('code-block', CodeBlock);
-Vue.component('release-version', ReleaseVersion);
 Vue.component('page-container', PageContainer);
 
 Vue.use(VueRouter);
+Vue.use(ElementUI);
 
 
 let router = new VueRouter({

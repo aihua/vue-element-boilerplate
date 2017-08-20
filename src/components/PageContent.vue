@@ -7,8 +7,6 @@
 
       <div class="md-title">{{ pageTitle }}</div>
 
-      <release-version></release-version>
-
       <md-button href="https://github.com/leonlibraries/ec-shop-management-ui-boilerplate" target="_blank" rel="noopener" class="md-icon-button github">
         <md-icon md-src="assets/icon-github.svg"></md-icon>
       </md-button>

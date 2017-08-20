@@ -20,19 +20,27 @@
             <md-list-expand>
               <md-list>
                 <md-list-item class="md-inset">
-                  <router-link exact to="/sys/account">账户管理</router-link>
+                  <router-link exact to="/sys/account">
+                    <md-icon>account_circle</md-icon>账户管理
+                  </router-link>
                 </md-list-item>
 
                 <md-list-item class="md-inset">
-                  <router-link exact to="/sys/roles">角色管理</router-link>
+                  <router-link exact to="/sys/roles">
+                    <md-icon>supervisor_account</md-icon>角色管理
+                  </router-link>
                 </md-list-item>
 
                 <md-list-item class="md-inset">
-                  <router-link exact to="/sys/permission">权限管理</router-link>
+                  <router-link exact to="/sys/permission">
+                    <md-icon>lock_open</md-icon>权限管理
+                  </router-link>
                 </md-list-item>
 
                 <md-list-item class="md-inset">
-                  <router-link exact to="/sys/menu">菜单管理</router-link>
+                  <router-link exact to="/sys/menu">
+                    <md-icon>menu</md-icon>菜单管理
+                  </router-link>
                 </md-list-item>
               </md-list>
             </md-list-expand>
@@ -159,32 +167,12 @@ body {
   .main-sidebar-links {
     overflow: auto;
     flex: 1;
-
     .md-inset .md-list-item-container {
       padding-left: 36px;
     }
-
     .md-list-item-container {
       font-size: 14px;
       font-weight: 500;
-    }
-  }
-
-  .release-version {
-    padding: 8px 8px 8px 16px;
-    border-top: 1px solid rgba(#000, .12);
-    display: none;
-
-    @media (max-width: 480px) {
-      display: block;
-    }
-
-    >div {
-      justify-content: center;
-    }
-
-    .md-select:after {
-      color: rgba(#000, .87);
     }
   }
 }
@@ -197,6 +185,10 @@ body {
   transform: translate3D(0, 0, 0);
   transition: $swift-ease-out;
   transition-delay: .2s;
+}
+
+.md-inset a {
+  float: left;
 }
 
 .md-router-enter,
