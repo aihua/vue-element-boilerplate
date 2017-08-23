@@ -12,6 +12,7 @@ import routes from './routes.js';
 import App from './App';
 import './core';
 import axios from 'axios';
+import store from './store';
 
 import PageContent from './components/PageContent';
 import PageContainer from './components/PageContainer';
@@ -33,10 +34,10 @@ Vue.component('page-container', PageContainer);
 Vue.use(VueRouter);
 Vue.use(ElementUI);
 
-
 let router = new VueRouter({
   mode: 'hash',
   base: window.location.pathname,
+  store,
   routes
 });
 
@@ -48,24 +49,18 @@ let handleSectionTheme = (currentRoute) => {
   if (name) {
     if (name === 'getting-started') {
       theme = 'indigo';
-    } else if (name.indexOf('themes') >= 0) {
-      theme = 'cyan';
-    } else if (name.indexOf('ui-elements') >= 0) {
-      theme = 'purple';
-    } else if (name === 'changelog') {
-      theme = 'orange';
     } else if (name === 'about') {
       theme = 'green';
     } else if (name === 'error') {
       theme = 'red';
     }
   }
-
   Vue.material.setCurrentTheme(theme);
 };
 
 ECShop = new ECShop({
   el: '#app',
+  store,
   router
 });
 
