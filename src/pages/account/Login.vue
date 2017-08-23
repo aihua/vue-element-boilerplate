@@ -4,10 +4,10 @@
       <div class="ms-login">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="0px" class="demo-loginForm">
           <el-form-item prop="username">
-            <el-input v-model="loginForm.username" placeholder="username"></el-input>
+            <el-input v-model="loginForm.username" placeholder="用户名"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input type="password" placeholder="password" v-model="loginForm.password" @keyup.enter.native="submitForm('loginForm')"></el-input>
+            <el-input type="password" placeholder="密码" v-model="loginForm.password" @keyup.enter.native="submitForm('loginForm')"></el-input>
           </el-form-item>
           <div class="login-btn">
             <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
@@ -22,6 +22,7 @@
 <script>
 
 import * as types from '../../store/mutations';
+import accountApi from '../../api/account/account-api';
 
 export default {
   data: function() {
@@ -49,7 +50,7 @@ export default {
         if (valid) {
           self.$axios({
             method: 'post',
-            baseURL: 'http://127.0.0.1:8083/auth/token',
+            baseURL: accountApi.ACCOUNT_LOGIN_API,
             data: {
               username: this.loginForm.username,
               password: this.loginForm.password
@@ -57,6 +58,9 @@ export default {
           }).then(function(resp) {
 
             self.$message.info('登录成功^_^');
+
+            console.debug('storing token...');
+
             try {
               store.commit('account/' + types.SET_TOKEN, {
                 account_token: resp.headers.authorization,
@@ -66,10 +70,15 @@ export default {
               console.error(error);
             }
 
+            /** TODO 初始化权限 */
+            console.debug('storing roles & permission...');
+
             self.$router.push('/');
 
           }).catch(function(error) {
-            if (error.response.status === 401) {
+            if (error.message === 'Network Error') {
+              self.$message.error('网络故障，请联系管理员！ಥ_ಥ');
+            } else if (error.response.status === 401) {
               self.$message.error('用户名或密码错误！ಥ_ಥ');
             } else {
               self.$message.error('服务器异常请联系管理员！ಥ_ಥ');

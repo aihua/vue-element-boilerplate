@@ -7,6 +7,8 @@ import * as types from '../mutations'
 const state = {
     account_name: '',
     account_token: '',
+    account_roles: [],
+    account_permissions: []
 }
 
 /**

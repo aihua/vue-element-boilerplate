@@ -2,10 +2,10 @@
   <page-content page-title="Error">
     <div class="main-content">
       <section>
-        <h2 class="md-headline">Hmmm. Too bad</h2>
-        <p>Are you searching for a new component? Or maybe you have an question? Get in touch!</p>
-        <md-button class="md-primary md-raised" href="mailto:marcosvmmoura@gmail.com?Subject=Vue%20Material%20-%20Question" target="_blank" rel="noopener">E-mail</md-button>
-        <md-button class="md-primary md-raised" href="https://github.com/marcosmoura/vue-material/issues/new" target="_blank" rel="noopener">New Issue</md-button>
+        <h2 class="md-headline">Hmmm. 出错了</h2>
+        <p>请联系管理员！</p>
+        <md-button class="md-primary md-raised" href="mailto:768357432@qq.com" target="_blank" rel="noopener">E-mail me</md-button>
+        <md-button class="md-primary md-raised" href="https://github.com/leonlibraries/ec-shop-management-ui-boilerplate/issues" target="_blank" rel="noopener">issue me</md-button>
       </section>
     </div>
   </page-content>

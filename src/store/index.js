@@ -4,6 +4,7 @@ import * as actions from './actions';
 // import * as getters from './getters'
 import account from './modules/account';
 import createLogger from 'vuex/dist/logger';
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
@@ -16,5 +17,5 @@ export default new Vuex.Store({
     account
   },
   strict: debug,
-  plugins: debug ? [createLogger()] : []
+  plugins: debug ? [createLogger(), createPersistedState()] : [createPersistedState()]
 });
