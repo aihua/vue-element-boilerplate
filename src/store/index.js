@@ -17,5 +17,5 @@ export default new Vuex.Store({
     account
   },
   strict: debug,
-  plugins: debug ? [createLogger(), createPersistedState()] : [createPersistedState()]
+  plugins: debug ? [createLogger(), createPersistedState({ key: 'ecshop' })] : [createPersistedState({ key: 'xx_shop' })]
 });

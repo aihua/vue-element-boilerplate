@@ -22,7 +22,7 @@
 <script>
 
 import * as types from '../../store/mutations';
-import accountApi from '../../api/account/account-api';
+import { ACCOUNT_LOGIN_API, MODULE_RESOURCE } from '../../api/account/account-api';
 
 export default {
   data: function() {
@@ -46,11 +46,12 @@ export default {
       const self = this;
       let store = this.$store;
 
+      debugger;
       self.$refs[formName].validate((valid) => {
         if (valid) {
           self.$axios({
             method: 'post',
-            baseURL: accountApi.ACCOUNT_LOGIN_API,
+            baseURL: ACCOUNT_LOGIN_API,
             data: {
               username: this.loginForm.username,
               password: this.loginForm.password
@@ -61,21 +62,43 @@ export default {
 
             console.debug('storing token...');
 
+            let authToken = resp.headers.authorization;
+
             try {
               store.commit('account/' + types.SET_TOKEN, {
-                account_token: resp.headers.authorization,
+                account_token: authToken,
                 account_name: self.loginForm.username
               });
             } catch (error) {
               console.error(error);
             }
 
-            /** TODO 初始化权限 */
-            console.debug('storing roles & permission...');
+            console.debug('storing roles & granted permission...');
+            try {
+              let payload = self.$base64url.decode(authToken.split('.')[1]);
 
+              store.commit('account/' + types.SET_AUTHES, JSON.parse(payload).perms);
+            } catch (error) {
+              console.error(error);
+            }
+
+            console.debug('initializing an granted url access array...');
+
+            self.$axios.get(
+              MODULE_RESOURCE,
+              {
+                headers: {
+                  Authorization: store.getters['account/getToken']
+                }
+              }).then((resp) => {
+                // TODO 将模块持久化到 vuex store
+                console.info(resp);
+                debugger;
+              });
             self.$router.push('/');
 
           }).catch(function(error) {
+
             if (error.message === 'Network Error') {
               self.$message.error('网络故障，请联系管理员！ಥ_ಥ');
             } else if (error.response.status === 401) {
@@ -83,6 +106,7 @@ export default {
             } else {
               self.$message.error('服务器异常请联系管理员！ಥ_ಥ');
             }
+
           });
         } else {
           console.warn('参数校验失败');
