@@ -116,7 +116,7 @@ router.beforeEach((to, from, next) => {
     ECShopApp.$assert.notEqual(token, '', '用户未登录');
     let payload = ECShopApp.$base64url.decode(token.split('.')[1]);
 
-    if (JSON.parse(payload).exp * 1000 < new Date().getTime()) {
+    if (JSON.parse(payload).exp < new Date().getTime()) {
       Vue.nextTick(() => {
         ECShopApp.closeSidenav();
         ECShopApp.$message.warning('检测到您的会话过期，请重新登录哦^_^');
