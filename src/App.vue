@@ -4,14 +4,14 @@
       <md-toolbar class="vue-material-logo" md-theme="white">
         <router-link exact to="/">
           <img :src="logo" alt="Vue">
-          <span>商城管理后台</span>
+          <span>系统管理后台</span>
         </router-link>
       </md-toolbar>
 
       <div class="main-sidebar-links">
         <md-list class="md-dense">
           <md-list-item>
-            <router-link exact to="/">商城介绍</router-link>
+            <router-link exact to="/">系统介绍</router-link>
           </md-list-item>
 
           <!-- 自动生成菜单目录 -->
