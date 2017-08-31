@@ -91,7 +91,7 @@ router.beforeEach((to, from, next) => {
    *
    * 解释： Vue 异步更新原理
    *
-   * 默认情况下，Vue 的 DOM 更新是异步执行的，当数据发生变化（vm.sdata = 'new'），
+   * 默认情况下，Vue 的 DOM 更新是异步执行的，当数据发生变化（vm.sdata = 'new_value'），
    * DOM 并不会马上触发更新，而是打开一个队列，然后把同一个事件循环（event loop）中观测到的数据变化推送到队列里，
    * 一次事件循环只有一次数据集合的推送。那么最终在下一次进入事件循环的时候，
    * Vue 会清空队列并进行必要的 DOM 更新。而这个时候特殊 nextTick 执行的时机。
@@ -109,7 +109,6 @@ router.beforeEach((to, from, next) => {
   }
 
   // 本地校验 token 是否过期
-
   try {
     let token = ECShopApp.$store.getters['account/getToken'];
 
@@ -117,9 +116,11 @@ router.beforeEach((to, from, next) => {
     let payload = ECShopApp.$base64url.decode(token.split('.')[1]);
 
     if (JSON.parse(payload).exp < new Date().getTime()) {
+      debugger;
+      store.clear();
       Vue.nextTick(() => {
         ECShopApp.closeSidenav();
-        ECShopApp.$message.warning('检测到您的会话过期，请重新登录哦^_^');
+        ECShopApp.$message.warning('检测到您的本地会话过期，请重新登录哦^_^');
         next({ path: '/login' });
       });
       return;
@@ -132,18 +133,10 @@ router.beforeEach((to, from, next) => {
     });
     return;
   }
-
-  // 本地校验 to 访问地址是否授权
-  let grantedAuthorities = ECShopApp.$store.getters['account/getGrantedAuthorities'];
-
-  debugger;
   // 服务端验证 token 是否失效
   ECShopApp.$axios({
     method: 'post',
-    baseURL: ECShopApp.$baseurl.IS_LOGGING,
-    headers: {
-      Authorization: ECShopApp.$store.getters['account/getToken']
-    }
+    baseURL: ECShopApp.$baseurl.IS_LOGGING
   }).then((resp) => {
     console.debug(resp);
     Vue.nextTick(() => {
@@ -151,10 +144,14 @@ router.beforeEach((to, from, next) => {
       next(true);
     });
   }).catch((error) => {
-    console.error(error);
     // 确定 token 已经失效
     if (error.response !== undefined && error.response.status === 403) {
-      this.isLogging = false;
+      ECShopApp.$store.commit('account/RESET');
+      Vue.nextTick(() => {
+        ECShopApp.closeSidenav();
+        ECShopApp.$message.warning('检测到您的会话失效，请重新登录哦^_^');
+        next({ path: '/login' });
+      });
     }
   });
 
@@ -164,3 +161,51 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to) => {
   handleSectionTheme(to);
 });
+
+
+/**
+ * axios request 拦截器
+ */
+ECShopApp.$axios.interceptors.request.use(
+  (config) => {
+    // Do something before request is sent
+    if (ECShopApp.$store.getters['account/getToken']) {
+      config.headers.Authorization = `${store.getters['account/getToken']}`;
+    }
+    return config;
+  },
+  (err) => {
+    // Do something with request error
+    return Promise.reject(err);
+  }
+);
+// Add a response interceptor
+ECShopApp.$axios.interceptors.response.use(
+  (response) => {
+    // Do something with response data
+    return response;
+  },
+  (error) => {
+    // Do something with response error
+    if (error.response) {
+      switch (error.response.status) {
+        case 403:
+          // exception 是用来区分授权失效还是访问受限，访问受限并不会需要你重新登录
+          if (!error.response.data.exception) {
+            // 授权失效
+            ECShopApp.$store.commit('account/RESET');
+            router.replace({
+              path: 'login',
+              query: { redirect: router.currentRoute.fullPath }
+            });
+          } else {
+            // 访问受限
+            ECShopApp.$message.warning('你没有权限访问此模块');
+          }
+        default:
+        //do nothing
+      }
+    }
+    return Promise.reject(error);
+  }
+);

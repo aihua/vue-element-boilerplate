@@ -85,15 +85,10 @@ export default {
             console.debug('initializing an granted url access array...');
 
             self.$axios.get(
-              MODULE_RESOURCE,
-              {
-                headers: {
-                  Authorization: store.getters['account/getToken']
-                }
-              }).then((resp) => {
+              MODULE_RESOURCE).then((resp) => {
                 // TODO 将模块持久化到 vuex store
+                store.commit('account/' + types.SET_MODULES, resp.data);
                 console.info(resp);
-                debugger;
               });
             self.$router.push('/');
 

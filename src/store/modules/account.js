@@ -16,7 +16,8 @@ const state = {
  */
 const getters = {
     getToken: state => state !== undefined ? state.account_token : '',
-    getGrantedAuthorities: state => state !== undefined ? state.account_authes : ''
+    getGrantedAuthorities: state => state !== undefined ? state.account_authes : '',
+    getModules: state => state !== undefined ? state.account_modules : ''
 }
 
 /**
@@ -36,6 +37,15 @@ const mutations = {
     },
     [types.SET_AUTHES](state, perms) {
         state.account_authes = perms;
+    },
+    [types.SET_MODULES](state, modules) {
+        state.account_modules = modules;
+    },
+    [types.RESET](s) {
+        const initial = state;
+        Object.keys(initial).forEach(key => {
+            s[key] = initial[key];
+        })
     }
 }
 

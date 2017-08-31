@@ -14,56 +14,15 @@
             <router-link exact to="/">商城介绍</router-link>
           </md-list-item>
 
-          <md-list-item>
-            <span>系统管理</span>
-
+          <!-- 自动生成菜单目录 -->
+          <md-list-item v-for="mod in this.$store.getters['account/getModules']" :key="mod.id">
+            <span>{{ mod.alias }}</span>
             <md-list-expand>
               <md-list>
-                <md-list-item class="md-inset">
-                  <router-link exact to="/sys/account">
-                    <md-icon>account_circle</md-icon>账户管理
+                <md-list-item class="md-inset" v-for="child in mod.children" :key="child.id">
+                  <router-link exact :to="child.url">
+                    <md-icon>{{ child.icon }}</md-icon>{{ child.alias }}
                   </router-link>
-                </md-list-item>
-
-                <md-list-item class="md-inset">
-                  <router-link exact to="/sys/roles">
-                    <md-icon>supervisor_account</md-icon>角色管理
-                  </router-link>
-                </md-list-item>
-
-                <md-list-item class="md-inset">
-                  <router-link exact to="/sys/permission">
-                    <md-icon>lock_open</md-icon>权限管理
-                  </router-link>
-                </md-list-item>
-
-                <md-list-item class="md-inset">
-                  <router-link exact to="/sys/menu">
-                    <md-icon>menu</md-icon>菜单管理
-                  </router-link>
-                </md-list-item>
-              </md-list>
-            </md-list-expand>
-          </md-list-item>
-
-          <md-list-item>
-            <span>商品管理</span>
-
-            <md-list-expand>
-              <md-list>
-                <md-list-item class="md-inset">
-                  <router-link exact to="/components/whiteframe">Whiteframe</router-link>
-                </md-list-item>
-              </md-list>
-            </md-list-expand>
-          </md-list-item>
-
-          <md-list-item>
-            <span>活动管理</span>
-            <md-list-expand>
-              <md-list>
-                <md-list-item class="md-inset">
-                  <router-link exact to="/ui-elements/typography">Typography</router-link>
                 </md-list-item>
               </md-list>
             </md-list-expand>
@@ -262,7 +221,8 @@ export default {
     return {
       toolbar: true,
       theme: 'default',
-      pageTitle: ''
+      pageTitle: '',
+      modules: []
     };
   },
   computed: {
@@ -283,8 +243,6 @@ export default {
     closeSidenav() {
       this.$refs['main-sidebar'].close();
     }
-  },
-  mounted() {
   }
 };
 </script>
