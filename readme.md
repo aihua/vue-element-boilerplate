@@ -14,12 +14,12 @@
 
 #### TODO tasks
 
-[x] 集成 element UI 组件
+- [X] 集成 vue-material && element UI 组件
 
-[x] 集成 vuex store 实现 token 等必要信息的客户端存储
+- [X] 集成 vuex store 实现 token 等必要信息的客户端存储
 
-[x] 菜单可直接由后端数据生成，并且有相应的访问权限
+- [X] 菜单可直接由后端数据生成，并且有相应的访问权限
 
-[x] 集成 axios 实现 http 请求
+- [X] 集成 axios 实现 http 请求
 
-[ ] 服务端渲染
+- [ ] 服务端渲染
