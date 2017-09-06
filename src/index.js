@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-default/index.css';
 import base64url from 'base64url';
 import assert from 'assert';
 import { sync } from 'vuex-router-sync';
+import $ from 'jquery';
 
 /* Configs */
 import './config.js';
@@ -34,6 +35,7 @@ Vue.prototype.$axios = axios;
 Vue.prototype.$base64url = base64url;
 Vue.prototype.$assert = assert;
 Vue.prototype.$baseurl = { IS_LOGGING: IS_LOGGING };
+Vue.prototype.$ = $;
 
 Vue.component('page-content', PageContent);
 Vue.component('docs-component', DocsComponent);

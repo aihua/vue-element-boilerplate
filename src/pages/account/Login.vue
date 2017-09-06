@@ -22,7 +22,7 @@
 <script>
 
 import * as types from '../../store/mutations';
-import { ACCOUNT_LOGIN_API, MODULE_RESOURCE } from '../../api/account/account-api';
+import { ACCOUNT_LOGIN, MODULE_TREE } from '../../api/account/account-api';
 
 export default {
   data: function() {
@@ -51,7 +51,7 @@ export default {
         if (valid) {
           self.$axios({
             method: 'post',
-            baseURL: ACCOUNT_LOGIN_API,
+            baseURL: ACCOUNT_LOGIN,
             data: {
               username: this.loginForm.username,
               password: this.loginForm.password
@@ -84,11 +84,14 @@ export default {
 
             console.debug('initializing an granted url access array...');
 
-            self.$axios.get(
-              MODULE_RESOURCE).then((resp) => {
-                // TODO 将模块持久化到 vuex store
-                store.commit('account/' + types.SET_MODULES, resp.data);
-                console.info(resp);
+            self.$axios.get(MODULE_TREE)
+              .then((resp) => {
+                if (resp.data.done) {
+                  store.commit('account/' + types.SET_MODULES, resp.data.data);
+                } else {
+                  console.error('something is wrong with resources access');
+                  self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
+                }
               });
             self.$router.push('/');
 
