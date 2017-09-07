@@ -1,1 +1,1 @@
-export const BASE_PATH = 'http://127.0.0.1:8083';
+export const BASE_PATH = 'http://ec2-52-77-232-250.ap-southeast-1.compute.amazonaws.com:8083';

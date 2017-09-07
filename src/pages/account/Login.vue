@@ -58,7 +58,7 @@ export default {
             }
           }).then(function(resp) {
 
-            self.$message.info('登录成功^_^');
+            self.$message({ message: '登录成功^_^', type: 'success' });
 
             console.debug('storing token...');
 

@@ -35,9 +35,12 @@ body {
 /*  Fluid Media
    ========================================================================== */
 
-ul:not(.md-list) > li + li {
-  margin-top: 8px;
-}
+/**
+ * 这个属性会影响全局
+ */
+//ul:not(.md-list) > li + li {
+//  margin-top: 8px;
+//}
 
 
 /*  Fluid Media

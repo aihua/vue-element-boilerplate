@@ -2,100 +2,125 @@
   <page-content page-title="账户管理">
     <page-container>
       <md-table-card>
-        <md-toolbar>
-          <h1 class="md-title">账户管理</h1>
+        <el-table ref="multipleTable" v-loading.body="loading" element-loading-text="拼命加载中" :data="tableData" stripe border style="width: 100%" @selection-change="handleSelectionChange" @sort-change="createDateSort">
+          <el-table-column type="selection" width="55">
+          </el-table-column>
+          <el-table-column prop="accountName" label="账户" width="180">
+          </el-table-column>
+          <el-table-column prop="nickName" label="昵称" width="180">
+          </el-table-column>
+          <el-table-column prop="mobile" label="手机号码">
+          </el-table-column>
+          <el-table-column prop="email" label="电子邮件">
+          </el-table-column>
+          <el-table-column prop="createDate" label="创建时间" sortable="custom" :formatter="formatter">
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" width="100">
+            <template scope="scope">
+              <el-button @click="show" type="text" size="small">查看</el-button>
+              <el-button type="text" size="small">编辑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <md-layout class="footer">
+          <md-layout md-align="start">
+            <span class="wrapper">
+                <md-button class="md-raised md-primary">新增</md-button>
+                <md-button id="delete" class="md-raised md-warn" disabled>删除</md-button>
+            </span>
+          </md-layout>
+          <md-layout md-align="center">
+            <el-pagination 
+                class="page-block"
+                @size-change="handleSizeChange" 
+                @current-change="handleCurrentChange" 
+                :current-page="pageInfo.number + 1" 
+                :page-sizes="[10,50,100]" 
+                :page-size="10" 
+                layout="total, sizes, prev, pager, next, jumper" 
+                :total="pageInfo.totalElements">
+            </el-pagination>
+          </md-layout>
+        </md-layout>
 
-          <md-button class="md-icon-button">
-            <md-icon>filter_list</md-icon>
-          </md-button>
-
-          <md-button class="md-icon-button">
-            <md-icon>search</md-icon>
-          </md-button>
-        </md-toolbar>
-
-        <md-table md-sort="createDate" md-sort-type="desc" @select="onSelect" @sort="onSort">
-          <md-table-header>
-            <md-table-row>
-              <md-table-head name="accountName" md-tooltip="登录依据">账户名</md-table-head>
-              <md-table-head name="nickName" md-tooltip="账号昵称">昵称</md-table-head>
-              <md-table-head name="mobile" md-tooltip="手机号码 唯一">手机号码</md-table-head>
-              <md-table-head name="email">电子邮箱</md-table-head>
-              <md-table-head name="createDate" md-sort-by="createDate">创建时间</md-table-head>
-            </md-table-row>
-          </md-table-header>
-
-          <md-table-body id="table-body">
-            <md-table-row v-for="(row, rowIndex) in accounts" :key="rowIndex" :md-item="row" md-auto-select md-selection>
-              <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex" v-if="columnIndex !== 'id'">
-                {{ column }}
-              </md-table-cell>
-            </md-table-row>
-          </md-table-body>
-        </md-table>
-
-        <md-table-pagination md-size="5" md-total="10" md-page="1" md-label="Rows" md-separator="of" :md-page-options="[5, 10, 25, 50]" @pagination="onPagination"></md-table-pagination>
       </md-table-card>
     </page-container>
+
   </page-content>
 </template>
 
-<style lang="scss" scoped>
-.md-avatar+.md-avatar {
-  margin-left: 8px;
-}
+<style scoped>
+  .wrapper{
+    margin-top:30px;
+    margin-left:10px;
+  }
+  .page-block{
+    position:absolute;
+    bottom:2px;
+  }
+  .footer{
+    height:100px;
+    padding-top:-10;
+  }
 </style>
+
 
 <script lang="babel">
 
   import {ACCOUNT_RESOURCE} from '../../api/account/account-api';
+  import Qs from 'qs';
 
   export default {
     data: () => ({
-      accounts: [],
-      table_heads: []
+      tableData: [],
+      loading: false
     }),
     methods: {
-      onSelect(data) {
-        console.info('selected');
-        this.selectedData = data;
-        this.$forceUpdate();
+      handleSizeChange() {
+        //触发 PageSize 变化后的回调
       },
-      onSort(sort) {
-        this.sort = sort;
+      handleCurrentChange() {
+        //当前也变更后的回调
       },
-      onPagination(page) {
-        debugger;
-        this.page = page;
-        this.queryPage(page);
+      handleSelectionChange(selectData) {
+        // 这里 selectData是一个数组对象，可以 forEach 遍历出来
+        console.info(selectData);
       },
-      queryPage(params) {
-        let self = this;
-        let $ = self.$;
-        //** 请求资源并渲染表格 */
+      createDateSort(page) {
+        // page 对象包含排序字段以及排序方式
+        console.info(page);
+      },
+      show() {
+        console.log(1);
+      },
+      formatter(row) {
+        return this.$moment(new Date(row.createDate))
+                  .format('YYYY-MM-DD HH:mm:ss');
+      },
+      queryPage(data) {
   
+        let self = this;
+
+        self.loading = true;
+        /**
+         *  请求资源并渲染表格
+         */
         self.accounts = [];
-        self.$axios({
-          method: 'get',
-          baseURL: ACCOUNT_RESOURCE,
-          data: params
+        self.$axios.get(ACCOUNT_RESOURCE, {
+          params: data,
+          paramsSerializer: function(params) {
+            return Qs.stringify(params, { indices: false });
+          }
         }).then((resp) => {
           if (resp.data.done) {
             let pageContent = resp.data.data;
   
+            this.pageInfo = pageContent;
             if (pageContent.numberOfElements > 0) {
-              /**
-               * 把需要的字段 筛选出来
-               */
-              $.each(pageContent.content, (index, element) => {
-                let acc_view = {};
-  
-                $.each(self.table_heads, (headIndex, value) => {
-                  acc_view[value] = element[value];
-                });
-                self.accounts.push(acc_view);
-              });
+              this.tableData = pageContent.content;
             }
+
+            self.loading = false;
           } else {
             console.error('something is wrong with resources access');
             self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
@@ -104,18 +129,7 @@
       }
     },
     mounted() {
-      let self = this;
-      let $ = self.$;
-  
-      //** 初始化表头信息 */
-      self.table_heads.push('id');
-      $.each($('.md-table-head'),
-          (index, value) => {
-            self.table_heads.push($(value).attr('name'));
-          });
-
-      self.queryPage({});
-  
+      this.queryPage();
     }
   };
 </script>

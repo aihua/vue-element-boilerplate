@@ -24,6 +24,8 @@ import DocsComponent from './components/DocsComponent';
 import ExampleBox from './components/ExampleBox';
 import ApiTable from './components/ApiTable';
 import CodeBlock from './components/CodeBlock';
+import VueMoment from 'vue-moment';
+import moment from 'moment';
 
 /** base url */
 import { IS_LOGGING } from './api/account/account-api';
@@ -46,6 +48,7 @@ Vue.component('page-container', PageContainer);
 
 Vue.use(VueRouter);
 Vue.use(ElementUI);
+Vue.use(VueMoment, { moment });
 
 let router = new VueRouter({
   mode: 'hash',
