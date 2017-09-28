@@ -28,7 +28,7 @@ import VueMoment from 'vue-moment';
 import moment from 'moment';
 
 /** base url */
-import { IS_LOGGING } from './api/account/account-api';
+import { IS_LOGGING } from './api/sys/account-api';
 
 /**
  * 第三方插件除了 import 以外还需要如此引入
@@ -121,7 +121,6 @@ router.beforeEach((to, from, next) => {
     let payload = ECShopApp.$base64url.decode(token.split('.')[1]);
 
     if (JSON.parse(payload).exp < new Date().getTime()) {
-      debugger;
       store.clear();
       Vue.nextTick(() => {
         ECShopApp.closeSidenav();
@@ -200,12 +199,17 @@ ECShopApp.$axios.interceptors.response.use(
             // 授权失效
             ECShopApp.$store.commit('account/RESET');
             router.replace({
-              path: 'login',
+              path: '/login',
               query: { redirect: router.currentRoute.fullPath }
             });
           } else {
             // 访问受限
             ECShopApp.$message.warning('你没有权限访问此模块');
+            ECShopApp.$store.commit('account/RESET');
+            router.replace({
+              path: '/login',
+              query: { redirect: router.currentRoute.fullPath }
+            });
           }
         default:
         //do nothing

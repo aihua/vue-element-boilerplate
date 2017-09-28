@@ -10,27 +10,26 @@
 
       <div class="main-sidebar-links">
         <md-list class="md-dense">
-          <md-list-item>
-            <router-link exact to="/">系统介绍</router-link>
-          </md-list-item>
 
-          <!-- 自动生成菜单目录 -->
-          <md-list-item v-for="mod in this.$store.getters['account/getModules']" :key="mod.id">
-            <span>{{ mod.alias }}</span>
-            <md-list-expand>
-              <md-list>
-                <md-list-item class="md-inset" v-for="child in mod.children" :key="child.id">
-                  <router-link exact :to="child.url">
-                    <md-icon>{{ child.icon }}</md-icon>{{ child.alias }}
-                  </router-link>
-                </md-list-item>
-              </md-list>
-            </md-list-expand>
-          </md-list-item>
+          <template v-if="this.$store.getters['account/getCurrentEntry'] !== ''">
+            <!-- 自动生成菜单目录 -->
+            <md-list-item v-for="mod in this.$store.getters['account/getModules'].children" :key="mod.id">
+              <span>{{ mod.alias }}</span>
+              <md-list-expand>
+                <md-list>
+                  <md-list-item class="md-inset" v-for="child in mod.children" :key="child.id">
+                    <router-link exact :to="child.url">
+                      <md-icon>{{ child.icon }}</md-icon>{{ child.alias }}
+                    </router-link>
+                  </md-list-item>
+                </md-list>
+              </md-list-expand>
+            </md-list-item>
+            <md-list-item style="bottom:1px">
+              <router-link exact to="/about">关于我们</router-link>
+            </md-list-item>
+          </template>
 
-          <md-list-item>
-            <router-link exact to="/about">关于我们</router-link>
-          </md-list-item>
         </md-list>
       </div>
     </md-sidenav>
@@ -44,7 +43,7 @@
 <style lang="scss">
 @import './vue-material/core/stylesheets/variables.scss';
 
-$sizebar-size: 280px;
+$sizebar-size: 230px;
 
 [v-cloak] {
   display: none;
@@ -159,6 +158,7 @@ body {
 
   @media (min-width: 1281px) {
     left: $sizebar-size;
+    right: $sizebar-size;
   }
 
   .main-content {

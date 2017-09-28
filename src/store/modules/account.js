@@ -8,7 +8,9 @@ const state = {
     account_name: '',
     account_token: '',
     account_authes: '',
-    account_modules: []
+    account_modules: [],
+    // 存储当前所处业务模块（ERP？小程序商城？淘宝？天猫？）
+    curr_entry_name: ''
 }
 
 /**
@@ -17,7 +19,20 @@ const state = {
 const getters = {
     getToken: state => state !== undefined ? state.account_token : '',
     getGrantedAuthorities: state => state !== undefined ? state.account_authes : '',
-    getModules: state => state !== undefined ? state.account_modules : ''
+    getAllModules: state => state !== undefined ? state.account_modules : '',
+    getModules: state => {
+        if (state === undefined || state.curr_entry_name === '') {
+            return [];
+        }
+        let curr_entrance = {};
+        state.account_modules.forEach(function (element) {
+            if (state.curr_entry_name === element.name) {
+                curr_entrance = element;
+            }
+        });
+        return curr_entrance;
+    },
+    getCurrentEntry: state => state !== undefined ? state.curr_entry_name : ''
 }
 
 /**
@@ -40,6 +55,9 @@ const mutations = {
     },
     [types.SET_MODULES](state, modules) {
         state.account_modules = modules;
+    },
+    [types.SET_CURR_ENTRY_NAME](state, name) {
+        state.curr_entry_name = name;
     },
     [types.RESET](s) {
         const initial = state;
