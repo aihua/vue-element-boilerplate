@@ -205,11 +205,6 @@ ECShopApp.$axios.interceptors.response.use(
           } else {
             // 访问受限
             ECShopApp.$message.warning('你没有权限访问此模块');
-            ECShopApp.$store.commit('account/RESET');
-            router.replace({
-              path: '/login',
-              query: { redirect: router.currentRoute.fullPath }
-            });
           }
         default:
         //do nothing
