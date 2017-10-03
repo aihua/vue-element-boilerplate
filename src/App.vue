@@ -34,9 +34,9 @@
       </div>
     </md-sidenav>
 
-    <transition name="md-router" appear>
+    <!-- <transition name="md-router" appear> -->
       <router-view></router-view>
-    </transition>
+    <!-- </transition> -->
   </div>
 </template>
 

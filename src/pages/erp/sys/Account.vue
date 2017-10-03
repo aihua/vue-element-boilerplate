@@ -4,13 +4,13 @@
       <!-- 面包屑 -->
       <el-breadcrumb separator=">" style="margin-bottom:20px">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>账户管理模块</el-breadcrumb-item>
+        <el-breadcrumb-item>账户管理</el-breadcrumb-item>
       </el-breadcrumb>
       <!-- 删除确认弹出框 -->
-      <el-dialog title="警告" :visible.sync="dialogVisible" size="tiny">
+      <el-dialog title="警告" :visible.sync="dialogDeleteVisible" size="tiny">
         <span>确认删除这 {{ this.selectData.length }} 条记录？</span>
         <span slot="footer" class="dialog-footer">
-          <md-button class="md-raised md-primary" @click="dialogVisible = false">取 消</md-button>
+          <md-button class="md-raised md-primary" @click="dialogDeleteVisible = false">取 消</md-button>
           <md-button class="md-raised md-warn" @click="deleteSelectData('yes')">确 定</md-button>
         </span>
       </el-dialog>
@@ -50,16 +50,14 @@
           </el-form-item>
           <el-form-item style="float:right">
             <md-button @click="dialogAddFormVisible=false">取消</md-button>
-            <md-button class="md-accent" @click="resetForm('addAccountForm')">重置</md-button>
+            <md-button class="md-raised md-accent" @click="resetForm('addAccountForm')">重置</md-button>
             <md-button class="md-raised md-primary" @click="submitAddForm()">提交</md-button>
           </el-form-item>
         </el-form>
       </el-dialog>
-      <!-- 查看面板 -->
-
       <!-- 主列表面板 -->
       <md-table-card>
-        <el-table ref="multipleTable" v-loading.body="loadingList" element-loading-text="玩命加载中" :data="tableData" stripe border style="width: 100%" @selection-change="handleSelectionChange" @sort-change="createDateSort">
+        <el-table ref="accountTable" v-loading.body="loadingList" element-loading-text="玩命加载中" :data="tableData" stripe border style="width: 100%" @selection-change="handleSelectionChange" @sort-change="createDateSort">
           <el-table-column type="expand">
             <template scope="props">
               <el-form label-position="left" inline class="table-expand">
@@ -74,6 +72,9 @@
                 </el-form-item>
                 <el-form-item label="电子邮件">
                   <span>{{ props.row.email }}</span>
+                </el-form-item>
+                <el-form-item label="创建人">
+                  <span>{{ props.row.createAccount }}</span>
                 </el-form-item>
                 <el-form-item label="创建时间">
                   <span>{{ formatterCreateDate(props.row) }}</span>
@@ -161,6 +162,7 @@
 
   import {ACCOUNT_RESOURCE} from '../../../api/sys/account-api';
   import {ROLE_RESOURCE} from '../../../api/sys/role-api';
+  // 解决多个同名字段的提交
   import Qs from 'qs';
 
   export default {
@@ -193,7 +195,7 @@
         },
         tableData: [],
         selectData: [],
-        dialogVisible: false,
+        dialogDeleteVisible: false,
         loadingList: false,
         loadingRoles: false,
         dialogAddFormVisible: false,
@@ -236,9 +238,9 @@
     methods: {
       // 新增数据
       submitAddForm() {
-        const self = this;
+        let self = this;
   
-        self.$refs['addAccountForm'].validate((valid) => {
+        this.$refs['addAccountForm'].validate((valid) => {
           if (valid) {
             self.$axios.post(ACCOUNT_RESOURCE, self.addAccountForm)
               .then((resp) => {
@@ -250,14 +252,12 @@
                 } else {
                   self.$message({ message: resp.data.err, type: 'error' });
                 }
-              })
-              .catch((error) => {
+              }).catch((error) => {
                 console.error(error);
                 self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
               });
           }
-        }
-        );
+        });
       },
       handleSizeChange() {
         //触发 PageSize 变化后的回调
@@ -285,9 +285,10 @@
       formatterRole(row) {
         let roles = '';
   
+        debugger;
         row.roles.forEach(
           (role) => {
-            roles += role.alias + ' ';
+            roles += role && role.alias ? role.alias + ' ' : '';
           }
         );
         return roles.trim();
@@ -300,7 +301,7 @@
         /**
          *  请求资源并渲染表格
          */
-        self.accounts = [];
+        self.tableData = [];
         self.$axios.get(ACCOUNT_RESOURCE, {
           params: data,
           paramsSerializer: function(params) {
@@ -312,7 +313,7 @@
   
             this.pageInfo = pageContent;
             if (pageContent.numberOfElements > 0) {
-              this.tableData = pageContent.content;
+              self.tableData = pageContent.content;
             }
             self.loadingList = false;
           } else {
@@ -333,20 +334,19 @@
           }
         }).then((resp) => {
           if (resp.data.done) {
-            self.rolesInline = resp.data.data;
+            self.rolesInline = resp.data.data.content;
             self.loadingRoles = false;
           }
         }).catch((error) => {
           console.error(error);
         });
-  
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
       deleteSelectData(data) {
         if (data === undefined) {
-          this.dialogVisible = true;
+          this.dialogDeleteVisible = true;
         } else if (data === 'yes') {
           let deleteIds = [];
 
@@ -364,7 +364,7 @@
           ).then((resp) => {
             if (resp.data.done) {
               self.$message({ message: '删除成功', type: 'success' });
-              self.dialogVisible = false;
+              self.dialogDeleteVisible = false;
               self.queryPage();
             } else {
               self.$message({ message: resp.data.err, type: 'error' });
