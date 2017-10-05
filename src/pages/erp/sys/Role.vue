@@ -42,6 +42,30 @@
             <!-- 主列表面板 -->
             <md-table-card>
                 <el-table v-loading.body="loadingList" element-loading-text="玩命加载中" :data="tableData" stripe border style="width: 100%" @selection-change="handleSelectionChange" @sort-change="createDateSort">
+                    <el-table-column type="expand">
+                        <template scope="props">
+                        <el-form label-position="left" inline class="table-expand">
+                            <el-form-item label="角色名">
+                            <span>{{ props.row.name }}</span>
+                            </el-form-item>
+                            <el-form-item label="别称">
+                            <span>{{ props.row.alias }}</span>
+                            </el-form-item>
+                            <el-form-item label="描述">
+                            <span>{{ props.row.description }}</span>
+                            </el-form-item>
+                            <el-form-item label="创建人">
+                            <span>{{ props.row.createAccount }}</span>
+                            </el-form-item>
+                            <el-form-item label="创建时间">
+                            <span>{{ formatterCreateDate(props.row) }}</span>
+                            </el-form-item>
+                            <el-form-item label="权限集合">
+                            <span>{{ formatterPermissions(props.row) }}</span>
+                            </el-form-item>
+                        </el-form>
+                        </template>
+                    </el-table-column>
                     <el-table-column type="selection" width="55">
                     </el-table-column>
                     <el-table-column prop="name" label="角色名">
@@ -90,6 +114,22 @@
 .footer {
   height: 100px;
   padding-top: -10;
+}
+
+/** 展开 **/
+.table-expand {
+  font-size: 0;
+}
+
+.table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+
+.table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
 }
 </style>
 
@@ -237,6 +277,16 @@ export default {
     formatterCreateDate(row) {
       return this.$moment(new Date(row.createDate))
                 .format('YYYY-MM-DD HH:mm:ss');
+    },
+    formatterPermissions(row) {
+      let perms = '';
+
+      row.permissions.forEach(
+          (perm) => {
+            perms += perm && perm.alias ? perm.alias + ' ' : '';
+          }
+        );
+      return perms;
     },
     handleSizeChange() {
 

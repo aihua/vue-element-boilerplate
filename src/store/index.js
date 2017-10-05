@@ -2,7 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import * as actions from './actions';
 // import * as getters from './getters'
-import account from './modules/account';
+import account from './modules/sys/account';
+import module from './modules/sys/module';
 import createLogger from 'vuex/dist/logger';
 import createPersistedState from 'vuex-persistedstate';
 
@@ -14,7 +15,8 @@ export default new Vuex.Store({
   actions,
   // getters,
   modules: {
-    account
+    account,
+    module
   },
   strict: debug,
   plugins: debug ? [createLogger(), createPersistedState({ key: 'ecshop' })] : [createPersistedState({ key: 'xshop' })]

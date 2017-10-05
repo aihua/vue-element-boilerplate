@@ -28,7 +28,7 @@ import * as types from '../store/mutations';
 export default {
   methods: {
     clickCallback(entryName, url) {
-      this.$store.commit('account/' + types.SET_CURR_ENTRY_NAME, entryName);
+      this.$store.commit('module/' + types.SET_CURR_ENTRY_NAME, entryName);
       this.$router.push(url);
     }
   }

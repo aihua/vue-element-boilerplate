@@ -11,9 +11,9 @@
       <div class="main-sidebar-links">
         <md-list class="md-dense">
 
-          <template v-if="this.$store.getters['account/getCurrentEntry'] !== ''">
+          <template v-if="this.$store.getters['module/getCurrentEntry'] !== ''">
             <!-- 自动生成菜单目录 -->
-            <md-list-item v-for="mod in this.$store.getters['account/getModules'].children" :key="mod.id">
+            <md-list-item v-for="mod in this.$store.getters['module/getModules'].children" :key="mod.id">
               <span>{{ mod.alias }}</span>
               <md-list-expand>
                 <md-list>

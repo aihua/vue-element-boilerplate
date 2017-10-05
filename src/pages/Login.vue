@@ -22,7 +22,8 @@
 <script>
 
 import * as types from '../store/mutations';
-import { ACCOUNT_LOGIN, MODULE_TREE } from '../api/sys/account-api';
+import { ACCOUNT_LOGIN } from '../api/sys/account-api';
+import { MODULE_TREE } from '../api/sys/module-api';
 
 export default {
   data: function() {
@@ -86,7 +87,7 @@ export default {
             self.$axios.get(MODULE_TREE)
               .then((resp) => {
                 if (resp.data.done) {
-                  store.commit('account/' + types.SET_MODULES, resp.data.data);
+                  store.commit('module/' + types.SET_MODULES, resp.data.data);
                 } else {
                   console.error('something is wrong with resources access');
                   self.$message.error('系统故障，请联系管理员！ಥ_ಥ');

@@ -126,6 +126,7 @@
 </template>
 
 <style scoped>
+/** 表格底部 **/
 .wrapper {
   margin-top: 30px;
   margin-left: 10px;
@@ -141,6 +142,7 @@
   padding-top: -10;
 }
 
+/** 展开 **/
 .table-expand {
   font-size: 0;
 }
@@ -285,7 +287,6 @@
       formatterRole(row) {
         let roles = '';
   
-        debugger;
         row.roles.forEach(
           (role) => {
             roles += role && role.alias ? role.alias + ' ' : '';

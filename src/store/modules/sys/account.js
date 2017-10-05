@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as types from '../mutations'
+import * as types from '../../mutations'
 
 /**
  * 数据实体（存储账户实体信息）

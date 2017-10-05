@@ -10,6 +10,7 @@ const ERPIntroduction = (r) => require.ensure([], () => r(require('./pages/erp/E
 /* account 模块 */
 const Account = (r) => require.ensure([], () => r(require('./pages/erp/sys/Account')), 'account');
 const Role = (r) => require.ensure([], () => r(require('./pages/erp/sys/Role')), 'role');
+const Module = (r) => require.ensure([], () => r(require('./pages/erp/sys/Module')), 'module');
 
 const main = [
   {
@@ -50,6 +51,11 @@ const modules = [
     path: '/erp/sys/role',
     name: 'role',
     component: Role
+  },
+  {
+    path: '/erp/sys/module',
+    name: 'module',
+    component: Module
   }
 ];
 
