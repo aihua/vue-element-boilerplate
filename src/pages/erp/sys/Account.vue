@@ -50,8 +50,8 @@
           </el-form-item>
           <el-form-item style="float:right">
             <md-button @click="dialogAddFormVisible=false">取消</md-button>
-            <md-button class="md-raised md-accent" @click="resetForm('addAccountForm')">重置</md-button>
-            <md-button class="md-raised md-primary" @click="submitAddForm()">提交</md-button>
+            <md-button class="md-raised md-accent" @click="resetForm('addAccountForm')">重 置</md-button>
+            <md-button class="md-raised md-primary" @click="submitAddForm()">提 交</md-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -109,12 +109,12 @@
         <md-layout class="footer">
           <md-layout md-align="start">
             <span class="wrapper">
-              <md-button class="md-raised md-primary" @click="dialogAddFormVisible = true">新增</md-button>
-              <md-button class="md-raised md-warn" @click="deleteSelectData()" :disabled="cannotDelete">删除</md-button>
+              <md-button class="md-raised md-primary" @click="dialogAddFormVisible = true">新 增</md-button>
+              <md-button class="md-raised md-warn" @click="deleteSelectData()" :disabled="cannotDelete">删 除</md-button>
             </span>
           </md-layout>
           <md-layout md-align="center">
-            <el-pagination class="page-block" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.number===NaN?0:pageInfo.number + 1" :page-sizes="[10,50,100]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.totalElements===NaN?0:pageInfo.totalElements">
+            <el-pagination class="page-block" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.number===NaN?0:pageInfo.number + 1" :page-sizes="[10,50,100]" :page-size="pageInfo.size" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.totalElements===NaN?0:pageInfo.totalElements">
             </el-pagination>
           </md-layout>
         </md-layout>
@@ -261,11 +261,13 @@
           }
         });
       },
-      handleSizeChange() {
+      handleSizeChange(size) {
         //触发 PageSize 变化后的回调
+        this.queryPage({size: size});
       },
-      handleCurrentChange() {
-        //当前也变更后的回调
+      handleCurrentChange(currPage) {
+        //当前页变更后的回调
+        this.queryPage({page: currPage});
       },
       handleSelectionChange(selectData) {
         // 这里 selectData是一个数组对象，可以 forEach 遍历出来

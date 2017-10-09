@@ -44,6 +44,8 @@ yarn run coverage
 
 - [X] 集成 axios 实现 http 请求
 
+- [ ] 生产环境打包
+
 - [ ] 服务端渲染
 
 

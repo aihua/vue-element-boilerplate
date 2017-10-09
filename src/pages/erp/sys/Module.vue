@@ -75,7 +75,7 @@
                         </span>
                     </md-layout>
                     <md-layout md-align="center">
-                        <el-pagination class="page-block" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.number===NaN?0:pageInfo.number + 1" :page-sizes="[10,50,100]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.totalElements===NaN?0:pageInfo.totalElements">
+                        <el-pagination class="page-block" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.number===NaN?0:pageInfo.number + 1" :page-sizes="[10,50,100]" :page-size="pageInfo.size" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.totalElements===NaN?0:pageInfo.totalElements">
                         </el-pagination>
                     </md-layout>
                 </md-layout>
@@ -143,13 +143,32 @@ export default {
   },
   methods: {
     submitAddForm() {
+      let self = this;
 
+      this.$refs['addModuleForm'].validate((valid) => {
+        if (valid) {
+          self.$axios.post(MODULE_RESOURCE, self.addModuleForm)
+              .then((resp) => {
+                if (resp.data.done) {
+                  self.$message({ message: '提交成功', type: 'success' });
+                  self.dialogAddFormVisible = false;
+                  self.$refs['addModuleForm'].resetFields();
+                  self.queryPage();
+                } else {
+                  self.$message({ message: resp.data.err, type: 'error' });
+                }
+              }).catch((error) => {
+                console.error(error);
+                self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
+              });
+        }
+      });
     },
-    handleSizeChange() {
-
+    handleSizeChange(size) {
+      this.queryPage({size: size});
     },
-    handleCurrentChange() {
-
+    handleCurrentChange(currPage) {
+      this.queryPage({page: currPage});
     },
     handleSelectionChange(selectData) {
         // 这里 selectData是一个数组对象，可以 forEach 遍历出来
@@ -224,6 +243,7 @@ export default {
       if (data === undefined) {
         this.dialogDeleteVisible = true;
       } else if (data === 'yes') {
+        debugger;
         let deleteIds = [];
 
         let self = this;

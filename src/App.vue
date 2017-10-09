@@ -4,7 +4,7 @@
       <md-toolbar class="vue-material-logo" md-theme="white">
         <router-link exact to="/">
           <img :src="logo" alt="Vue">
-          <span>系统管理后台</span>
+          <span>内部管理系统</span>
         </router-link>
       </md-toolbar>
 

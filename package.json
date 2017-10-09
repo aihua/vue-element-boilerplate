@@ -1,6 +1,6 @@
 {
   "name": "ec-shop-management-ui-boilerplate",
-  "description": "商城管理后台 UI",
+  "description": "内部管理系统 UI",
   "version": "0.7.4",
   "author": "LeonWong <768357432@qq.com>",
   "homepage": "https://vuematerial.github.io",
@@ -33,9 +33,8 @@
   ],
   "scripts": {
     "dev": "babel-node build/server/index.js --presets es2015,stage-0",
-    "build:docs": "babel-node build/server/build-docs.js --presets es2015,stage-0",
     "build:lib": "babel-node build/server/build-lib.js --presets es2015,stage-0",
-    "build": "rm -rf dist && npm run build:docs && npm run build:lib",
+    "build": "rm -rf dist && npm run build:lib",
     "lint": "eslint --ext .js,.vue --fix src docs",
     "release": "bash build/release.sh"
   },

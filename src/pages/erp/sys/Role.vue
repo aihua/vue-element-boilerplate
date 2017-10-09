@@ -91,7 +91,7 @@
                         </span>
                     </md-layout>
                     <md-layout md-align="center">
-                        <el-pagination class="page-block" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.number===NaN?0:pageInfo.number + 1" :page-sizes="[10,50,100]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.totalElements===NaN?0:pageInfo.totalElements">
+                        <el-pagination class="page-block" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageInfo.number===NaN?0:pageInfo.number + 1" :page-sizes="[10,50,100]" :page-size="pageInfo.size" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.totalElements===NaN?0:pageInfo.totalElements">
                         </el-pagination>
                     </md-layout>
                 </md-layout>
@@ -288,11 +288,11 @@ export default {
         );
       return perms;
     },
-    handleSizeChange() {
-
+    handleSizeChange(size) {
+      this.queryPage({size: size});
     },
-    handleCurrentChange() {
-
+    handleCurrentChange(currPage) {
+      this.queryPage({page: currPage});
     },
     createDateSort() {
 

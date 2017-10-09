@@ -11,6 +11,7 @@ const ERPIntroduction = (r) => require.ensure([], () => r(require('./pages/erp/E
 const Account = (r) => require.ensure([], () => r(require('./pages/erp/sys/Account')), 'account');
 const Role = (r) => require.ensure([], () => r(require('./pages/erp/sys/Role')), 'role');
 const Module = (r) => require.ensure([], () => r(require('./pages/erp/sys/Module')), 'module');
+const Permission = (r) => require.ensure([], () => r(require('./pages/erp/sys/Permission')), 'permission');
 
 const main = [
   {
@@ -56,6 +57,11 @@ const modules = [
     path: '/erp/sys/module',
     name: 'module',
     component: Module
+  },
+  {
+    path: '/erp/sys/permission',
+    name: 'permission',
+    component: Permission
   }
 ];
 
