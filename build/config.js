@@ -12,7 +12,7 @@ const config = {
 
 let dev = {
   server: {
-    port: process.env.PORT || '80'
+    port: process.env.PORT || '8092'
   },
   env: {
     NODE_ENV: '"development"'
