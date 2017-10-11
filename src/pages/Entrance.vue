@@ -1,7 +1,7 @@
 <template>
   <page-content page-title="选择入口">
     <page-container>
-      <md-card style="width:320px" v-for="mod in this.$store.getters['account/getAllModules']" :key="mod.id">
+      <md-card style="width:320px" v-for="mod in this.$store.getters['module/getAllModules']" :key="mod.id">
         <md-card-media-cover md-solid>
           <md-card-media md-ratio="1:1">
             <img src="assets/card-sky.jpg" alt="Skyscraper">
