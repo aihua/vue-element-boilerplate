@@ -32,8 +32,8 @@
                     <el-form-item label="描述" prop="description" :label-width="formLabelWidth">
                         <el-input v-model="addModuleForm.description"></el-input>
                     </el-form-item>
-                    <el-form-item label="父模块" prop="parentId" :label-width="formLabelWidth">
-                        <el-select filterable remote placeholder="输入角色关键词" v-model="addModuleForm.parentId" :remote-method="queryParent" :loading="loadingParent">
+                    <el-form-item label="挂载模块" prop="parentId" :label-width="formLabelWidth">
+                        <el-select filterable remote placeholder="输入模块关键词" v-model="addModuleForm.parentId" :remote-method="queryParent" :loading="loadingParent">
                             <el-option v-for="item in modulesInline" :key="item.id" :label="item.alias" :value="item.id">
                             </el-option>
                         </el-select>
