@@ -56,7 +56,7 @@
           </el-table-column>
           <el-table-column prop="description" label="分销渠道">
           </el-table-column>
-          <el-table-column prop="description" label="对接人">
+          <el-table-column prop="description" label="对接人">  
           </el-table-column>
           <el-table-column prop="createDate" label="最后登录时间" sortable="custom" :formatter="formatterLastLoginDate">
           </el-table-column>
