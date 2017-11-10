@@ -34,6 +34,7 @@ export default {
   },
   mounted() {
     try {
+      debugger;
       let token = this.$store.getters['account/getToken'];
 
       this.$assert.notEqual(token, '', '用户未登录');

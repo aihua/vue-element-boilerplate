@@ -35,9 +35,9 @@
           <el-form-item label="再次输入密码" prop="checkPass" :label-width="formLabelWidth">
             <el-input type="password" v-model="addAccountForm.checkPass"/>
           </el-form-item>
-          <el-form-item label="角色" prop="roles" :label-width="formLabelWidth">
-            <el-select multiple filterable remote placeholder="输入角色关键词" 
-                v-model="addAccountForm.roles"
+          <el-form-item label="角色" prop="roleIds" :label-width="formLabelWidth">
+            <el-select name="addRolesSelect" multiple-limit multiple filterable remote placeholder="输入角色关键词" 
+                v-model="addAccountForm.roleIds"
                 :remote-method="queryRoles"
                 :loading="loadingRoles">
                 <el-option
@@ -52,6 +52,41 @@
             <md-button @click="dialogAddFormVisible=false">取消</md-button>
             <md-button class="md-raised md-accent" @click="resetForm('addAccountForm')">重 置</md-button>
             <md-button class="md-raised md-primary" @click="submitAddForm()">提 交</md-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <!-- 修改面板 -->
+      <el-dialog title="修改账户" :visible.sync="dialogAlterFormVisible">
+        <el-form :model="alterAccountForm" :rules="addRules" label-position="left" ref="alterAccountForm" label-width="80px">
+          <el-form-item label="账户名" prop="accountName" :label-width="formLabelWidth">
+            <el-input v-model="alterAccountForm.accountName"></el-input>
+          </el-form-item>
+          <el-form-item label="昵称" prop="nickName" :label-width="formLabelWidth">
+            <el-input v-model="alterAccountForm.nickName"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号码" prop="mobile" :label-width="formLabelWidth">
+            <el-input v-model="alterAccountForm.mobile"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
+            <el-input v-model="alterAccountForm.email"/>
+          </el-form-item>
+          <el-form-item label="角色" prop="roleIds" :label-width="formLabelWidth">
+            <el-select name="alterRolesSelect" value-key="id" allow-create multiple-limit multiple filterable clearable remote placeholder="输入角色关键词" 
+                v-model="alterAccountForm.roleIds"
+                :remote-method="queryRoles"
+                :loading="loadingRoles">
+                <el-option
+                    v-for="item in rolesInline"
+                    :key="item.id"
+                    :label="item.alias"
+                    :value="item.id">
+                </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item style="float:right">
+            <md-button @click="dialogAlterFormVisible=false">取消</md-button>
+            <md-button class="md-raised md-accent" @click="resetForm('alterAccountForm')">重 置</md-button>
+            <md-button class="md-raised md-primary" @click="submitAlterForm()">提 交</md-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -101,7 +136,7 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="100">
             <template scope="scope">
-              <el-button type="text" size="small">编辑</el-button>
+              <el-button type="text" size="small" @click="showAlterPage(scope.row.id)">编辑</el-button>
               <el-button type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
@@ -201,6 +236,7 @@
         loadingList: false,
         loadingRoles: false,
         dialogAddFormVisible: false,
+        dialogAlterFormVisible: false,
         formLabelWidth: '120px',
         rolesInline: [],
         addAccountForm: {
@@ -210,7 +246,15 @@
           email: '',
           password: '',
           checkPass: '',
-          roles: []
+          roleIds: []
+        },
+        alterAccountForm: {
+          id: '',
+          accountName: '',
+          nickName: '',
+          mobile: '',
+          email: '',
+          roleIds: []
         },
         addRules: {
           accountName: [
@@ -261,6 +305,28 @@
           }
         });
       },
+      submitAlterForm() {
+        let self = this;
+  
+        this.$refs['alterAccountForm'].validate((valid) => {
+          if (valid) {
+            self.$axios.put(ACCOUNT_RESOURCE, self.alterAccountForm)
+              .then((resp) => {
+                if (resp.data.done) {
+                  self.$message({ message: '提交成功', type: 'success' });
+                  self.dialogAlterFormVisible = false;
+                  self.$refs['alterAccountForm'].resetFields();
+                  self.queryPage();
+                } else {
+                  self.$message({ message: resp.data.err, type: 'error' });
+                }
+              }).catch((error) => {
+                console.error(error);
+                self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
+              });
+          }
+        });
+      },
       handleSizeChange(size) {
         //触发 PageSize 变化后的回调
         this.queryPage({size: size});
@@ -278,8 +344,22 @@
         // page 对象包含排序字段以及排序方式
         console.info(page);
       },
-      show() {
-        console.log(1);
+      showAlterPage(id) {
+        // 编辑页面显示
+        console.log(id);
+        let self = this;
+  
+        this.dialogAlterFormVisible = true;
+        this.$axios.get(ACCOUNT_RESOURCE + '/' + id)
+          .then((resp) => {
+            if (resp.data.done) {
+              self.alterAccountForm = resp.data.data;
+              self.alterAccountForm.roleIds = [{id: '111', label: 'acb'}, {id: '222', label: 'cdb'}];
+            } else {
+              console.error('something is wrong with resources access');
+              self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
+            }
+          });
       },
       formatterCreateDate(row) {
         return this.$moment(new Date(row.createDate))
@@ -312,6 +392,8 @@
           }
         }).then((resp) => {
           if (resp.data.done) {
+            debugger;
+
             let pageContent = resp.data.data;
   
             this.pageInfo = pageContent;

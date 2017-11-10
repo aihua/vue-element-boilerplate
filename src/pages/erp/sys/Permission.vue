@@ -1,6 +1,11 @@
 <template>
     <page-content page-title="权限管理">
         <page-container>
+            <!-- 面包屑 -->
+            <el-breadcrumb separator=">" style="margin-bottom:20px">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+            </el-breadcrumb>
             <!-- 主面板 -->
             <md-table-card>
                 <el-table ref="moduleTable" v-loading.body="loadingList" element-loading-text="玩命加载中" :data="tableData" stripe border style="width: 100%" @selection-change="handleSelectionChange" @sort-change="createDateSort">

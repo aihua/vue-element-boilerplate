@@ -42,7 +42,7 @@
     "vue": "^2.3.3",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",
-    "element-ui": "1.4.2",
+    "element-ui": "1.4.9",
     "vue-core-image-upload": "2.1.11",
     "vue-datasource": "1.0.9",
     "vue-schart": "^0.1.2",
