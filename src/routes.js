@@ -12,6 +12,7 @@ const Account = (r) => require.ensure([], () => r(require('./pages/erp/sys/Accou
 const Role = (r) => require.ensure([], () => r(require('./pages/erp/sys/Role')), 'role');
 const Module = (r) => require.ensure([], () => r(require('./pages/erp/sys/Module')), 'module');
 const Permission = (r) => require.ensure([], () => r(require('./pages/erp/sys/Permission')), 'permission');
+const Member = (r) => require.ensure([], () => r(require('./pages/erp/member/Member')), 'member');
 
 const main = [
   {
@@ -62,6 +63,11 @@ const modules = [
     path: '/erp/sys/permission',
     name: 'permission',
     component: Permission
+  },
+  {
+    path: '/erp/member/memberinfo',
+    name: 'member',
+    component: Member
   }
 ];
 
