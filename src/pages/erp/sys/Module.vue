@@ -49,6 +49,41 @@
                     </el-form-item>
                 </el-form>
             </el-dialog>
+            <!-- 修改面板 -->
+            <el-dialog title="修改模块" :visible.sync="dialogAlterFormVisible">
+                <el-form :model="alterModuleForm" :rules="addRules" label-position="left" ref="alterModuleForm" label-width="80px">
+                    <el-form-item label="模块名" prop="name" :label-width="formLabelWidth">
+                        <el-input v-model="alterModuleForm.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="模块别称" prop="alias" :label-width="formLabelWidth">
+                        <el-input v-model="alterModuleForm.alias"></el-input>
+                    </el-form-item>
+                    <el-form-item label="访问路径" prop="url" :label-width="formLabelWidth">
+                        <el-input v-model="alterModuleForm.url"></el-input>
+                    </el-form-item>
+                    <el-form-item label="icon" prop="icon" :label-width="formLabelWidth">
+                        <el-input v-model="alterModuleForm.icon"></el-input>
+                    </el-form-item>
+                    <el-form-item label="描述" prop="description" :label-width="formLabelWidth">
+                        <el-input v-model="alterModuleForm.description"></el-input>
+                    </el-form-item>
+                    <el-form-item label="挂载模块" prop="parentId" :label-width="formLabelWidth">
+                        <el-select filterable remote placeholder="输入模块关键词" v-model="alterModuleForm.parentId" :remote-method="queryParent" :loading="loadingParent">
+                            <el-option v-for="item in modulesInline" :key="item.id" :label="item.alias" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="是否隐藏" prop="hidden" :label-width="formLabelWidth">
+                        <el-switch v-model="alterModuleForm.hidden" on-text="是" off-text="否">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item style="float:right">
+                        <md-button @click="dialogAlterFormVisible=false">取 消</md-button>
+                        <md-button class="md-raised md-accent" @click="resetForm('alterModuleForm')">重 置</md-button>
+                        <md-button class="md-raised md-primary" @click="submitAlterForm()">提 交</md-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
             <!-- 主面板 -->
             <md-table-card>
                 <el-table ref="moduleTable" v-loading.body="loadingList" element-loading-text="玩命加载中" :data="tableData" stripe border style="width: 100%" @selection-change="handleSelectionChange" @sort-change="createDateSort">
@@ -62,7 +97,7 @@
                     <el-table-column prop="createDate" label=" 创建时间" sortable="custom" :formatter="formatterCreateDate"></el-table-column>
                     <el-table-column fixed="right" label="操作" width="100">
                         <template scope="scope">
-                            <el-button type="text" size="small">编辑</el-button>
+                            <el-button type="text" size="small" @click="showAlterPage(scope.row.id)">编辑</el-button>
                             <el-button type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
@@ -121,6 +156,15 @@ export default {
         description: '',
         hidden: false
       },
+      alterModuleForm: {
+        name: '',
+        alias: '',
+        url: '',
+        parentId: '',
+        icon: '',
+        description: '',
+        hidden: false
+      },
       pageInfo: {
         number: 0,
         totalElements: 0
@@ -130,6 +174,7 @@ export default {
       formLabelWidth: '120px',
       dialogDeleteVisible: false,
       dialogAddFormVisible: false,
+      dialogAlterFormVisible: false,
       cannotDelete: true,
       addRules: {
         name: [
@@ -163,6 +208,44 @@ export default {
               });
         }
       });
+    },
+    submitAlterForm() {
+      let self = this;
+
+      this.$refs['alterModuleForm'].validate((valid) => {
+        if (valid) {
+          self.$axios.put(MODULE_RESOURCE, self.alterModuleForm)
+              .then((resp) => {
+                if (resp.data.done) {
+                  self.$message({ message: '提交成功', type: 'success' });
+                  self.dialogAlterFormVisible = false;
+                  self.$refs['alterModuleForm'].resetFields();
+                  self.queryPage();
+                } else {
+                  self.$message({ message: resp.data.err, type: 'error' });
+                }
+              }).catch((error) => {
+                console.error(error);
+                self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
+              });
+        }
+      });
+    },
+    showAlterPage(id) {
+        // 编辑页面显示
+      console.log(id);
+      let self = this;
+
+      this.dialogAlterFormVisible = true;
+      this.$axios.get(MODULE_RESOURCE + '/' + id)
+          .then((resp) => {
+            if (resp.data.done) {
+              self.alterModuleForm = resp.data.data;
+            } else {
+              console.error('something is wrong with resources access');
+              self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
+            }
+          });
     },
     handleSizeChange(size) {
       this.queryPage({size: size});

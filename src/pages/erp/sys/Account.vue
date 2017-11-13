@@ -6,12 +6,20 @@
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>账户管理</el-breadcrumb-item>
       </el-breadcrumb>
-      <!-- 删除确认弹出框 -->
+      <!-- 删除确认弹出框 selected -->
       <el-dialog title="警告" :visible.sync="dialogDeleteVisible" size="tiny">
         <span>确认删除这 {{ this.selectData.length }} 条记录？</span>
         <span slot="footer" class="dialog-footer">
           <md-button class="md-raised md-primary" @click="dialogDeleteVisible = false">取 消</md-button>
           <md-button class="md-raised md-warn" @click="deleteSelectData('yes')">确 定</md-button>
+        </span>
+      </el-dialog>
+      <!-- 删除确认弹出框 specify one-->
+      <el-dialog title="警告" :visible.sync="dialogDeleteOneVisible" size="tiny">
+        <span> {{ this.deleteWarningMessage }} </span>
+        <span slot="footer" class="dialog-footer">
+          <md-button class="md-raised md-primary" @click="cancelDelete()">取 消</md-button>
+          <md-button class="md-raised md-warn" @click="deleteItem()">确 定</md-button>
         </span>
       </el-dialog>
       <!-- 新增面板 -->
@@ -137,7 +145,7 @@
           <el-table-column fixed="right" label="操作" width="100">
             <template scope="scope">
               <el-button type="text" size="small" @click="showAlterPage(scope.row.id)">编辑</el-button>
-              <el-button type="text" size="small">删除</el-button>
+              <el-button type="text" size="small" @click="showDeleteDialog(scope.row.id,scope.row.accountName)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -278,7 +286,10 @@
             { required: true, min: 8, max: 30, message: '密码长度在 8 到 30 个字符', trigger: 'blur' }
           ]
         },
-        cannotDelete: true
+        cannotDelete: true,
+        deleteWarningMessage: '',
+        dialogDeleteOneVisible: false,
+        deleteOneId: ''
       };
     },
     methods: {
@@ -354,7 +365,7 @@
           .then((resp) => {
             if (resp.data.done) {
               self.alterAccountForm = resp.data.data;
-              self.alterAccountForm.roleIds = [{id: '111', label: 'acb'}, {id: '222', label: 'cdb'}];
+              //self.alterAccountForm.roleIds = [{id: '111', label: 'acb'}, {id: '222', label: 'cdb'}];
             } else {
               console.error('something is wrong with resources access');
               self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
@@ -392,8 +403,6 @@
           }
         }).then((resp) => {
           if (resp.data.done) {
-            debugger;
-
             let pageContent = resp.data.data;
   
             this.pageInfo = pageContent;
@@ -460,6 +469,34 @@
             self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
           });
         }
+      },
+      showDeleteDialog(id, name) {
+        var message = '是否删除名为 ' + name + ' 的账户？';
+  
+        this.deleteOneId = id;
+        this.deleteWarningMessage = message;
+        this.dialogDeleteOneVisible = true;
+      },
+      deleteItem() {
+        let self = this;
+  
+        this.$axios.delete(ACCOUNT_RESOURCE + '/' + this.deleteOneId)
+            .then((resp) => {
+              if (resp.data.done) {
+                self.$message({ message: '删除成功', type: 'success' });
+                self.dialogDeleteVisible = false;
+                self.deleteOneId = '';
+                self.deleteWarningMessage = '';
+                self.queryPage();
+              } else {
+                self.$message({ message: resp.data.err, type: 'error' });
+              }
+            });
+      },
+      cancelDelete() {
+        this.dialogDeleteOneVisible = false;
+        this.deleteOneId = '';
+        this.deleteWarningMessage = '';
       }
     },
     mounted() {
