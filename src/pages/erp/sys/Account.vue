@@ -79,8 +79,8 @@
             <el-input v-model="alterAccountForm.email"/>
           </el-form-item>
           <el-form-item label="角色" prop="roleIds" :label-width="formLabelWidth">
-            <el-select name="alterRolesSelect" value-key="id" allow-create multiple-limit multiple filterable clearable remote placeholder="输入角色关键词" 
-                v-model="alterAccountForm.roleIds"
+            <el-select name="alterRolesSelect" value-key="id" multiple filterable reserve-keyword remote placeholder="输入角色关键词" 
+                v-model="roleIds"
                 :remote-method="queryRoles"
                 :loading="loadingRoles">
                 <el-option
@@ -247,6 +247,7 @@
         dialogAlterFormVisible: false,
         formLabelWidth: '120px',
         rolesInline: [],
+        roleIds: [],
         addAccountForm: {
           accountName: '',
           nickName: '',
@@ -365,6 +366,10 @@
           .then((resp) => {
             if (resp.data.done) {
               self.alterAccountForm = resp.data.data;
+              self.rolesInline = resp.data.data.roles;
+              self.roleIds = resp.data.data.roles.map((item) => {
+                return item.id;
+              });
               //self.alterAccountForm.roleIds = [{id: '111', label: 'acb'}, {id: '222', label: 'cdb'}];
             } else {
               console.error('something is wrong with resources access');
@@ -421,7 +426,7 @@
 
         self.loadingRoles = true;
 
-        self.rolesInline = [];
+        //self.rolesInline = [];
         self.$axios.get(ROLE_RESOURCE, {
           params: {
             alias: query + ':Fuzzy'
