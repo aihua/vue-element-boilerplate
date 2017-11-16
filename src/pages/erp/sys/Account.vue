@@ -49,7 +49,7 @@
                 :remote-method="queryRoles"
                 :loading="loadingRoles">
                 <el-option
-                    v-for="item in rolesInline"
+                    v-for="item in roleOptions"
                     :key="item.id"
                     :label="item.alias"
                     :value="item.id">
@@ -80,11 +80,11 @@
           </el-form-item>
           <el-form-item label="角色" prop="roleIds" :label-width="formLabelWidth">
             <el-select name="alterRolesSelect" value-key="id" multiple filterable reserve-keyword remote placeholder="输入角色关键词" 
-                v-model="roleIds"
+                v-model="roleIdsForSelect"
                 :remote-method="queryRoles"
                 :loading="loadingRoles">
                 <el-option
-                    v-for="item in rolesInline"
+                    v-for="item in roleOptions"
                     :key="item.id"
                     :label="item.alias"
                     :value="item.id">
@@ -246,8 +246,8 @@
         dialogAddFormVisible: false,
         dialogAlterFormVisible: false,
         formLabelWidth: '120px',
-        rolesInline: [],
-        roleIds: [],
+        roleOptions: [],
+        roleIdsForSelect: [], // 角色 ID 数组，用于给修改页面的 select 空间以数据绑定的功能实现
         addAccountForm: {
           accountName: '',
           nickName: '',
@@ -322,6 +322,7 @@
   
         this.$refs['alterAccountForm'].validate((valid) => {
           if (valid) {
+            self.alterAccountForm.roleIds = self.roleIdsForSelect;
             self.$axios.put(ACCOUNT_RESOURCE, self.alterAccountForm)
               .then((resp) => {
                 if (resp.data.done) {
@@ -366,11 +367,8 @@
           .then((resp) => {
             if (resp.data.done) {
               self.alterAccountForm = resp.data.data;
-              self.rolesInline = resp.data.data.roles;
-              self.roleIds = resp.data.data.roles.map((item) => {
-                return item.id;
-              });
-              //self.alterAccountForm.roleIds = [{id: '111', label: 'acb'}, {id: '222', label: 'cdb'}];
+              self.roleOptions = resp.data.data.roles;
+              self.roleIdsForSelect = resp.data.data.roles.map((item) => item.id);
             } else {
               console.error('something is wrong with resources access');
               self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
@@ -426,14 +424,14 @@
 
         self.loadingRoles = true;
 
-        //self.rolesInline = [];
+        self.roleOptions = [];
         self.$axios.get(ROLE_RESOURCE, {
           params: {
             alias: query + ':Fuzzy'
           }
         }).then((resp) => {
           if (resp.data.done) {
-            self.rolesInline = resp.data.data.content;
+            self.roleOptions = resp.data.data.content;
             self.loadingRoles = false;
           }
         }).catch((error) => {
