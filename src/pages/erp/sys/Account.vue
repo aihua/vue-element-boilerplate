@@ -44,7 +44,7 @@
             <el-input type="password" v-model="addAccountForm.checkPass"/>
           </el-form-item>
           <el-form-item label="角色" prop="roleIds" :label-width="formLabelWidth">
-            <el-select name="addRolesSelect" multiple-limit multiple filterable remote placeholder="输入角色关键词" 
+            <el-select name="addRolesSelect" multiple filterable remote placeholder="输入角色关键词" 
                 v-model="addAccountForm.roleIds"
                 :remote-method="queryRoles"
                 :loading="loadingRoles">

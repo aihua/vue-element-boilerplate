@@ -34,7 +34,7 @@
                     </el-form-item>
                     <el-form-item label="挂载模块" prop="parentId" :label-width="formLabelWidth">
                         <el-select filterable remote placeholder="输入模块关键词" v-model="addModuleForm.parentId" :remote-method="queryParent" :loading="loadingParent">
-                            <el-option v-for="item in modulesInline" :key="item.id" :label="item.alias" :value="item.id">
+                            <el-option v-for="item in moduleOptions" :key="item.id" :label="item.alias" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -68,8 +68,8 @@
                         <el-input v-model="alterModuleForm.description"></el-input>
                     </el-form-item>
                     <el-form-item label="挂载模块" prop="parentId" :label-width="formLabelWidth">
-                        <el-select filterable remote placeholder="输入模块关键词" v-model="alterModuleForm.parentId" :remote-method="queryParent" :loading="loadingParent">
-                            <el-option v-for="item in modulesInline" :key="item.id" :label="item.alias" :value="item.id">
+                        <el-select filterable remote placeholder="输入模块关键词" v-model="alterModuleForm.parent" :remote-method="queryParent" :loading="loadingParent">
+                            <el-option v-for="item in moduleOptions" :key="item.id" :label="item.alias" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -144,7 +144,7 @@ import Qs from 'qs';
 export default {
   data() {
     return {
-      modulesInline: [],
+      moduleOptions: [],
       tableData: [],
       selectData: [],
       addModuleForm: {
@@ -305,7 +305,7 @@ export default {
         /**
          *  请求资源并渲染表格
          */
-      self.modulesInline = [];
+      self.moduleOptions = [];
       self.$axios.get(MODULE_RESOURCE, {
         params: {
           alias: query + ':Fuzzy'
@@ -315,7 +315,7 @@ export default {
         }
       }).then((resp) => {
         if (resp.data.done) {
-          self.modulesInline = resp.data.data.content;
+          self.moduleOptions = resp.data.data.content;
           self.loadingParent = false;
         }
       }).catch((error) => {
