@@ -136,7 +136,7 @@
 }
 </style>
  
-<<script>
+<script>
 import { MODULE_RESOURCE } from '../../../api/sys/module-api';
 // 解决多个同名字段的提交
 import Qs from 'qs';
@@ -177,12 +177,8 @@ export default {
       dialogAlterFormVisible: false,
       cannotDelete: true,
       addRules: {
-        name: [
-            { required: true, message: '请输入模块名', trigger: 'blur' }
-        ],
-        alias: [
-            { required: true, message: '请输入别称', trigger: 'blur' }
-        ]
+        name: [{ required: true, message: '请输入模块名', trigger: 'blur' }],
+        alias: [{ required: true, message: '请输入别称', trigger: 'blur' }]
       }
     };
   },
@@ -192,20 +188,22 @@ export default {
 
       this.$refs['addModuleForm'].validate((valid) => {
         if (valid) {
-          self.$axios.post(MODULE_RESOURCE, self.addModuleForm)
-              .then((resp) => {
-                if (resp.data.done) {
-                  self.$message({ message: '提交成功', type: 'success' });
-                  self.dialogAddFormVisible = false;
-                  self.$refs['addModuleForm'].resetFields();
-                  self.queryPage();
-                } else {
-                  self.$message({ message: resp.data.err, type: 'error' });
-                }
-              }).catch((error) => {
-                console.error(error);
-                self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
-              });
+          self.$axios
+            .post(MODULE_RESOURCE, self.addModuleForm)
+            .then((resp) => {
+              if (resp.data.done) {
+                self.$message({ message: '提交成功', type: 'success' });
+                self.dialogAddFormVisible = false;
+                self.$refs['addModuleForm'].resetFields();
+                self.queryPage();
+              } else {
+                self.$message({ message: resp.data.err, type: 'error' });
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
+            });
         }
       });
     },
@@ -214,47 +212,48 @@ export default {
 
       this.$refs['alterModuleForm'].validate((valid) => {
         if (valid) {
-          self.$axios.put(MODULE_RESOURCE, self.alterModuleForm)
-              .then((resp) => {
-                if (resp.data.done) {
-                  self.$message({ message: '提交成功', type: 'success' });
-                  self.dialogAlterFormVisible = false;
-                  self.$refs['alterModuleForm'].resetFields();
-                  self.queryPage();
-                } else {
-                  self.$message({ message: resp.data.err, type: 'error' });
-                }
-              }).catch((error) => {
-                console.error(error);
-                self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
-              });
+          self.$axios
+            .put(MODULE_RESOURCE, self.alterModuleForm)
+            .then((resp) => {
+              if (resp.data.done) {
+                self.$message({ message: '提交成功', type: 'success' });
+                self.dialogAlterFormVisible = false;
+                self.$refs['alterModuleForm'].resetFields();
+                self.queryPage();
+              } else {
+                self.$message({ message: resp.data.err, type: 'error' });
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              self.$message({ message: '服务器故障，请联系管理员', type: 'error' });
+            });
         }
       });
     },
     showAlterPage(id) {
-        // 编辑页面显示
+      // 编辑页面显示
       console.log(id);
       let self = this;
 
       this.dialogAlterFormVisible = true;
-      this.$axios.get(MODULE_RESOURCE + '/' + id)
-          .then((resp) => {
-            if (resp.data.done) {
-              self.alterModuleForm = resp.data.data;
-            } else {
-              console.error('something is wrong with resources access');
-              self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
-            }
-          });
+      this.$axios.get(MODULE_RESOURCE + '/' + id).then((resp) => {
+        if (resp.data.done) {
+          self.alterModuleForm = resp.data.data;
+        } else {
+          console.error('something is wrong with resources access');
+          self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
+        }
+      });
     },
     handleSizeChange(size) {
-      this.queryPage({size: size});
+      this.queryPage({ size: size });
     },
     handleCurrentChange(currPage) {
-      this.queryPage({page: currPage});
+      this.queryPage({ page: currPage });
     },
     handleSelectionChange(selectData) {
-        // 这里 selectData是一个数组对象，可以 forEach 遍历出来
+      // 这里 selectData是一个数组对象，可以 forEach 遍历出来
       this.cannotDelete = selectData.length === 0;
       this.selectData = selectData;
     },
@@ -262,38 +261,40 @@ export default {
       let self = this;
 
       self.loadingList = true;
-        /**
+      /**
          *  请求资源并渲染表格
          */
       self.tableData = [];
-      self.$axios.get(MODULE_RESOURCE, {
-        params: query,
-        paramsSerializer: function(params) {
-          return Qs.stringify(params, { indices: false });
-        }
-      }).then((resp) => {
-        if (resp.data.done) {
-          let pageContent = resp.data.data;
-
-          this.pageInfo = pageContent;
-          if (pageContent.numberOfElements > 0) {
-            self.tableData = pageContent.content;
+      self.$axios
+        .get(MODULE_RESOURCE, {
+          params: query,
+          paramsSerializer: function(params) {
+            return Qs.stringify(params, { indices: false });
           }
-          self.loadingList = false;
-        } else {
-          console.error('something is wrong with resources access');
-          self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
-        }
-      });
+        })
+        .then((resp) => {
+          if (resp.data.done) {
+            let pageContent = resp.data.data;
 
+            this.pageInfo = pageContent;
+            if (pageContent.numberOfElements > 0) {
+              self.tableData = pageContent.content;
+            }
+            self.loadingList = false;
+          } else {
+            console.error('something is wrong with resources access');
+            self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
+          }
+        });
     },
     createDateSort(page) {
-        // page 对象包含排序字段以及排序方式
+      // page 对象包含排序字段以及排序方式
       console.info(page);
     },
     formatterCreateDate(row) {
-      return this.$moment(new Date(row.createDate))
-                  .format('YYYY-MM-DD HH:mm:ss');
+      return this.$moment(new Date(row.createDate)).format(
+        'YYYY-MM-DD HH:mm:ss'
+      );
     },
     formatterParent(row) {
       return row && row.parent ? row.parent.name : '';
@@ -302,25 +303,28 @@ export default {
       let self = this;
 
       self.loadingParent = true;
-        /**
+      /**
          *  请求资源并渲染表格
          */
       self.moduleOptions = [];
-      self.$axios.get(MODULE_RESOURCE, {
-        params: {
-          alias: query + ':Fuzzy'
-        },
-        paramsSerializer: function(params) {
-          return Qs.stringify(params, { indices: false });
-        }
-      }).then((resp) => {
-        if (resp.data.done) {
-          self.moduleOptions = resp.data.data.content;
-          self.loadingParent = false;
-        }
-      }).catch((error) => {
-        console.error(error);
-      });
+      self.$axios
+        .get(MODULE_RESOURCE, {
+          params: {
+            alias: query + ':Fuzzy'
+          },
+          paramsSerializer: function(params) {
+            return Qs.stringify(params, { indices: false });
+          }
+        })
+        .then((resp) => {
+          if (resp.data.done) {
+            self.moduleOptions = resp.data.data.content;
+            self.loadingParent = false;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     deleteSelectData(data) {
       if (data === undefined) {
@@ -334,13 +338,13 @@ export default {
         this.selectData.forEach(function(element) {
           deleteIds.push(element.id);
         });
-        this.$axios.delete(MODULE_RESOURCE,
-          {
+        this.$axios
+          .delete(MODULE_RESOURCE, {
             data: {
               ids: deleteIds
             }
-          }
-          ).then((resp) => {
+          })
+          .then((resp) => {
             if (resp.data.done) {
               self.$message({ message: '删除成功', type: 'success' });
               self.dialogDeleteVisible = false;
