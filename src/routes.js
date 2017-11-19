@@ -13,7 +13,7 @@ const Role = (r) => require.ensure([], () => r(require('./pages/erp/sys/Role')),
 const Module = (r) => require.ensure([], () => r(require('./pages/erp/sys/Module')), 'module');
 const Permission = (r) => require.ensure([], () => r(require('./pages/erp/sys/Permission')), 'permission');
 const Member = (r) => require.ensure([], () => r(require('./pages/erp/member/Member')), 'member');
-
+const Channel = (r) => require.ensure([], () => r(require('./pages/erp/cargo/Channel')), 'channels');
 const main = [
   {
     path: '/',
@@ -65,9 +65,14 @@ const modules = [
     component: Permission
   },
   {
-    path: '/erp/member/memberinfo',
+    path: '/erp/member/memberInfo',
     name: 'member',
     component: Member
+  },
+  {
+    path: '/erp/channel/salesChannels',
+    name: 'channels',
+    component: Channel
   }
 ];
 
