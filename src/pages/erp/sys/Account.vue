@@ -424,7 +424,6 @@
 
         self.loadingRoles = true;
 
-        self.roleOptions = [];
         self.$axios.get(ROLE_RESOURCE, {
           params: {
             alias: query + ':Fuzzy'
