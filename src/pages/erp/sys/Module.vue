@@ -135,7 +135,7 @@
   padding-top: -10;
 }
 </style>
- 
+
 <script>
 import { MODULE_RESOURCE } from '../../../api/sys/module-api';
 // 解决多个同名字段的提交
@@ -240,8 +240,8 @@ export default {
       this.$axios.get(MODULE_RESOURCE + '/' + id).then((resp) => {
         if (resp.data.done) {
           self.alterModuleForm = resp.data.data;
+          self.moduleOptions.push(resp.data.data.parent);
         } else {
-          console.error('something is wrong with resources access');
           self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
         }
       });
@@ -306,7 +306,6 @@ export default {
       /**
          *  请求资源并渲染表格
          */
-      self.moduleOptions = [];
       self.$axios
         .get(MODULE_RESOURCE, {
           params: {

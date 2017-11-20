@@ -48,7 +48,7 @@
             </el-col>
           <el-col :span="12">
           <el-form-item label="销售渠道" prop="salesChannelIds" :label-width="formLabelWidth">
-            <el-select name="addRolesSelect"  multiple filterable remote placeholder="输入销售渠道关键词"
+            <el-select name="addSalesChannelsSelect"  multiple filterable remote placeholder="输入销售渠道关键词"
                        v-model="addMemberForm.salesChannelIds"
                        :remote-method="querySalesChannel"
                        :loading="loadingSalesChannels">
@@ -126,7 +126,7 @@
 
       <!-- 修改面板 -->
       <el-dialog title="修改会员" :visible.sync="dialogAlterFormVisible">
-        <el-form :model="alterMemberForm" :rules="addRules" label-position="left" ref="alterMemberForm" label-width="80px">
+        <el-form :model="alterMemberForm" :rules="addRules" label-position="" ref="alterMemberForm" label-width="80px">
           <el-col :span="12">
             <el-form-item label="会员编码" prop="memberCode" :label-width="formLabelWidth">
               <el-input v-model="alterMemberForm.memberCode" :disabled="true"></el-input>
@@ -155,7 +155,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="销售渠道" prop="salesChannelIds" :label-width="formLabelWidth">
-              <el-select name="addRolesSelect"  multiple filterable remote placeholder="输入销售渠道关键词"
+              <el-select name="editSalesChannelSelect"  multiple filterable remote placeholder="输入销售渠道关键词"
                          v-model="channelIdsForSelect"
                          :remote-method="querySalesChannel"
                          :loading="loadingSalesChannels">
@@ -491,7 +491,8 @@
               self.channelIdsForSelect = resp.data.data.salesChannels.map((item) => item.id);
               this.userIcon = resp.data.data.userIcon;
               this.userLogoIcon = resp.data.data.userLogoIcon;
-              self.alterMemberForm.sellerAccountId = resp.data.data.account.nickName;
+              this.nickName = resp.data.data.account.nickName;
+              self.sellerOptions.push(resp.data.data.account);
             } else {
               console.error('something is wrong with resources access');
               self.$message.error('系统故障，请联系管理员！ಥ_ಥ');
@@ -744,7 +745,6 @@
         /**
          *  请求资源并渲染表格
          */
-        self.sellerOptions = [];
         self.$axios.get(ACCOUNT_RESOURCE, {
           params: {
             nickName: query + ':Fuzzy'
